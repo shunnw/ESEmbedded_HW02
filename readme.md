@@ -35,7 +35,7 @@ This is the hw02 sample. Please follow the steps below.
 	Does the order of the registers in the `push` and the `pop` instructions affect the excution results?  
 
 	For example, will `push {r0, r1, r2}` and `push {r2, r0, r1}` act in the same way?  
-
+v
 	Which register will be pushed into the stack first?
 
 2. You have to state how you designed the observation (code), and how you performed it.  
@@ -56,3 +56,32 @@ This is the hw02 sample. Please follow the steps below.
 --------------------
 
 Please take your note here.
+
+--------------------
+
+# 1. 實驗題目
+觀察`{r0,r1,r2,r3}`和`push{r2,r0,r3,r1}`兩者之差異
+
+--------------------
+
+# 2. 實驗步驟
+
+--------------------
+
+1.先將資料夾 gnu-mcu-eclipse-qemu 完整複製到 ESEmbedded_HW02 資料夾中
+
+2.根據[ARM Architecture Reference Manual Thumb-2 Supplement](http://www.nc.es.ncku.edu.tw/course/embedded/pdf/Thumb2.pdf)敘述知道順序並無差異
+  + 4.6.98 `POP`
+  	+ The registers are loaded in sequence, the lowest-numbered register from the lowest memory address, through to the highest-numbered register from the highest memory address.
+  
+  + 4.6.99 `PUSH`
+  	+ The registers are stored in sequence, the lowest-numbered register to the lowest memory address, through to the highest-numbered register to the highest memory address.
+	
+3.設計測試程式 main.s ，從 _start 開始後先在r0,r1,r2,r3中分別填入100,101,102,103的值，執行`push {r0, r1, r2, r3}`與`pop {r2}`，再執行`push{r2,r0,r3,r1}`和`pop {r1, r2}`
+  
+--------------------
+
+# main.s
+
+--------------------
+  
