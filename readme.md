@@ -121,6 +121,19 @@ sleep:
 
 4. 將 main.s 編譯並以 qemu 模擬， `$ make clean`, `$ make`, `$ make qemu` 開啟另一 Terminal 連線 `$ arm-none-eabi-gdb` ，再輸入 `target remote localhost:1234` 連接，輸入兩次的 ctrl + x 再輸入 2, 開啟 Register 以及指令，並且輸入 `si` 單步執行觀察。
 
+5. 將#100,#101,#102,#103 分別存入r0,r1,r2,r3，接著執行`push {r0, r1, r2, r3}`，sp由`0x20000100`變為`0x200000f0`。
+![](https://raw.githubusercontent.com/shunnw/ESEmbedded_HW02/master/img/2019-03-11%2019-26-39%20%E7%9A%84%E8%9E%A2%E5%B9%95%E6%93%B7%E5%9C%96.png)
 
-	
-  
+6.執行`pop {r2}`，sp由`0x200000f0`變為`0x200000f4`，此時r0被放入r2。
+![](https://raw.githubusercontent.com/shunnw/ESEmbedded_HW02/master/img/2019-03-11%2019-26-57%20%E7%9A%84%E8%9E%A2%E5%B9%95%E6%93%B7%E5%9C%96.png)
+
+7.發現程式碼內原本的`push{r2, r0, r3, r1}`，變成了`push {r0, r1, r2, r3}`，而執行後sp由`0x200000f4`變為`0x200000ef`。
+![](https://raw.githubusercontent.com/shunnw/ESEmbedded_HW02/master/img/2019-03-11%2019-27-08%20%E7%9A%84%E8%9E%A2%E5%B9%95%E6%93%B7%E5%9C%96.png)
+
+8.執行`pop {r1, r2}`，sp由`0x200000ef`變為`0x200000ec`，此時r1和r2分別被放入r2和r1。
+![](https://raw.githubusercontent.com/shunnw/ESEmbedded_HW02/master/img/2019-03-11%2019-27-14%20%E7%9A%84%E8%9E%A2%E5%B9%95%E6%93%B7%E5%9C%96.png)
+
+# 3. 結果與討論
+1.暫存器的順序對`pop`和`push`的順序並無影響。
+
+2.`push`會將值由上往下堆疊入暫存器，而`pop`則是由下往上讀取，因此後存入暫存器的值會先被取出。
