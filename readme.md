@@ -55,18 +55,12 @@ v
 
 --------------------
 
-Please take your note here.
-
---------------------
-
 # 1. 實驗題目
+
 觀察`{r0,r1,r2,r3}`和`push{r2,r0,r3,r1}`兩者之差異
 
---------------------
 
 # 2. 實驗步驟
-
---------------------
 
 1.先將資料夾 gnu-mcu-eclipse-qemu 完整複製到 ESEmbedded_HW02 資料夾中
 
@@ -78,10 +72,55 @@ Please take your note here.
   	+ The registers are stored in sequence, the lowest-numbered register to the lowest memory address, through to the highest-numbered register to the highest memory address.
 	
 3.設計測試程式 main.s ，從 _start 開始後先在r0,r1,r2,r3中分別填入100,101,102,103的值，執行`push {r0, r1, r2, r3}`與`pop {r2}`，再執行`push{r2,r0,r3,r1}`和`pop {r1, r2}`
-  
---------------------
+
 
 # main.s
 
---------------------
+```
+_start:
+	//
+	//mov # to reg
+	//
+	movs	r0,	#100
+	movs	r1,	#101
+	mov	r2,	#102
+	movw	r3,	#103
+
+	//
+	//push
+	//
+	push	{r0,r1,r2,r3}
+
+	//
+	//pop
+	//
+	pop	{r2}
+
+	//
+        //push
+        //
+        push    {r2,r0,r3,r1}
+
+	//
+        //pop
+        //
+        pop     {r1,r2}
+
+label01:
+	nop
+
+	//
+	//branch w/ link
+	//
+	bl	sleep
+
+sleep:
+	nop
+	b	.
+```
+
+4. 將 main.s 編譯並以 qemu 模擬， `$ make clean`, `$ make`, `$ make qemu` 開啟另一 Terminal 連線 `$ arm-none-eabi-gdb` ，再輸入 `target remote localhost:1234` 連接，輸入兩次的 ctrl + x 再輸入 2, 開啟 Register 以及指令，並且輸入 `si` 單步執行觀察。
+
+
+	
   
